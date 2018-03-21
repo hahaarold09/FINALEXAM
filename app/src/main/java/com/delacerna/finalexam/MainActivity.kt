@@ -11,6 +11,9 @@ import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
+
+    private val url = "http://ws.audioscrobbler.com/2.0/?method=album.search&album="
+    private val url1 = "&api_key=07b17a11c897d35ca6252225d00b68be&format=json"
     private val addAlbum = ArrayList<SearchAlbum>()
 
 
@@ -19,32 +22,34 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         btnsearch.setOnClickListener {
+            addAlbum.clear()
             fetchAlbum()
         }
-
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
     }
 
     private fun fetchAlbum() {
-        for (i in 1..50) {
-        doAsync {
-            var tempAlbum = editTextView.toString()
-            val resultJson = URL("http://ws.audioscrobbler.com/2.0/?method=album.search&album="+tempAlbum+"&api_key=07b17a11c897d35ca6252225d00b68be").readText()
-            val jsonObject = JSONObject(resultJson)
-            val albumName = jsonObject.getJSONObject("albummatches").getJSONArray("album")
-                    .getJSONObject(0).getString("name")
-            val artistName = jsonObject.getJSONObject("albummatches").getJSONArray("album")
-                    .getJSONObject(0).getString("artist")
-            val imgUrl =  jsonObject.getJSONObject("albummatches").getJSONArray("album").getJSONObject(0)
-                    .getJSONArray("image").getJSONObject(0).getString("#text")
-            uiThread {
-                recyclerView.adapter = AlbumAdapter( this@MainActivity,addAlbum)
-               addAlbum.add(SearchAlbum(albumName,artistName,Image(imgUrl)))
+        for (i in 0..50) {
+            doAsync {
+                var tempAlbum = editTextView.text.toString()
+                val resultJson = URL(url+tempAlbum+url1).readText()
+                val jsonObject = JSONObject(resultJson)
+                val albumName = jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+                        .getJSONObject(i).getString("name")
+                val artistName = jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+                        .getJSONObject(i).getString("artist")
+//
+//                val imgName = jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+//                        .getJSONObject(i).getJSONArray("image").getJSONObject(0).getString("#text")
 
+                uiThread {
+                    recyclerView.adapter = AlbumAdapter(this@MainActivity, addAlbum)
+                    addAlbum.add(SearchAlbum(albumName,artistName))
+
+                }
             }
-        }
         }
     }
 }
