@@ -40,13 +40,13 @@ class MainActivity : AppCompatActivity() {
                         .getJSONObject(i).getString("name")
                 val artistName = jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
                         .getJSONObject(i).getString("artist")
-//
-//                val imgName = jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
-//                        .getJSONObject(i).getJSONArray("image").getJSONObject(0).getString("#text")
+
+                val imgName = jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+                        .getJSONObject(i).getJSONArray("image").getJSONObject(1).getString("#text")
 
                 uiThread {
                     recyclerView.adapter = AlbumAdapter(this@MainActivity, addAlbum)
-                    addAlbum.add(SearchAlbum(albumName,artistName))
+                    addAlbum.add(SearchAlbum(albumName,artistName, imgName))
 
                 }
             }

@@ -17,8 +17,8 @@ class AlbumAdapter(var context: Context,
 
         holder?.view?.txtAlbum?.text = searchAlbum[position].name
         holder?.view?.txtArtist?.text = searchAlbum[position].artist
-//        val imgHolder = holder?.view?.imgView
-//        Picasso.with(holder?.view?.context).load(searchAlbum[position].imageURL.text).into(imgHolder)
+        val imgHolder = holder?.view?.imgView
+        Picasso.with(holder?.view?.context).load(searchAlbum[position].text).into(imgHolder)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CustomViewHolder {
