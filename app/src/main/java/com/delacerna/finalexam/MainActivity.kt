@@ -28,11 +28,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
+                addAlbum.clear()
                 fetchAlbum(query)
                 return true
             }
 
         })
+        btnClear.setOnClickListener {
+            addAlbum.clear()
+        }
         recyclerView.layoutManager = LinearLayoutManager(this)
 
     }
