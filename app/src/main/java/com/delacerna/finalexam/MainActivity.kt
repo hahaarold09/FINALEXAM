@@ -12,7 +12,7 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
 
 
-    private val url = "http://ws.audioscrobbler.com/2.0/?method=album.search&album="
+    private val url = "https://ws.audioscrobbler.com/2.0/?method=album.search&album="
     private val url1 = "&api_key=07b17a11c897d35ca6252225d00b68be&format=json"
     private val addAlbum = ArrayList<SearchAlbum>()
 
@@ -21,28 +21,45 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnsearch.setOnClickListener {
-            addAlbum.clear()
-            fetchAlbum()
-        }
+        searchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
 
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                fetchAlbum(query)
+                return true
+            }
+
+        })
         recyclerView.layoutManager = LinearLayoutManager(this)
 
     }
 
-    private fun fetchAlbum() {
-        for (i in 0..50) {
+    private fun fetchAlbum(text: String) {
+        for (i in 0..49) {
             doAsync {
-                var tempAlbum = editTextView.text.toString()
-                val resultJson = URL(url+tempAlbum+url1).readText()
+                val tempText :String = text
+                val resultJson = URL(url+tempText+url1).readText()
                 val jsonObject = JSONObject(resultJson)
+
                 val albumName = jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
                         .getJSONObject(i).getString("name")
+
                 val artistName = jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
                         .getJSONObject(i).getString("artist")
+                var imgName = ""
 
-                val imgName = jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
-                        .getJSONObject(i).getJSONArray("image").getJSONObject(1).getString("#text")
+                imgName = if(jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+                        .getJSONObject(i).getJSONArray("image").getJSONObject(2).getString("#text") == ""){
+                    jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+                            .getJSONObject(i).getJSONArray("image").getJSONObject(2).getString("")
+                }else{
+                    jsonObject.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+                            .getJSONObject(i).getJSONArray("image").getJSONObject(2).getString("#text")
+                }
+
 
                 uiThread {
                     recyclerView.adapter = AlbumAdapter(this@MainActivity, addAlbum)
