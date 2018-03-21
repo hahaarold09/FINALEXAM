@@ -3,6 +3,7 @@ package com.delacerna.finalexam
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
+                progressBar.visibility = View.VISIBLE
                 addAlbum.clear()
                 fetchAlbum(query)
                 return true
@@ -70,6 +72,9 @@ class MainActivity : AppCompatActivity() {
                     addAlbum.add(SearchAlbum(albumName,artistName, imgName))
 
                 }
+            }
+            if(i == 50){
+                progressBar.visibility = View.INVISIBLE
             }
         }
     }
