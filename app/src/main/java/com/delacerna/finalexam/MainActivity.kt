@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         })
         btnClear.setOnClickListener {
             addAlbum.clear()
+            txtView.visibility = View.VISIBLE
         }
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -45,6 +46,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchAlbum(text: String) {
         for (i in 0..49) {
+            if(i >= 1){
+                txtView.visibility = View.INVISIBLE
+            }
             doAsync {
                 val tempText :String = text
                 val resultJson = URL(url+tempText+url1).readText()
