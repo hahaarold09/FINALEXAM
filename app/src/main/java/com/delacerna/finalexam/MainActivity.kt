@@ -18,21 +18,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        fetchAlbum()
+        btnsearch.setOnClickListener {
+            fetchAlbum()
+        }
+
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        editTextView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onQueryTextSubmit(query: String): Boolean {
-                fetchAlbum()
-                return false
-            }
-
-        })
     }
 
     private fun fetchAlbum() {
